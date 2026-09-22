@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IntellLab - Calculadora Geométrica</title>
+
+    <!-- Estilos de Tailwind CSS vía CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { electric: "#00e5ff" },
+          },
+        },
+      };
+    </script>
+    
+    <link rel="stylesheet" href="style/styles.css">
+
+    <!-- Librería p5.js para los modelos 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+  </head>
+
+  <body class="min-h-screen bg-zinc-950 font-sans text-zinc-100">
+
+    <header class="border-b border-electric/50 bg-zinc-950">
+      <nav class="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+        <a href="#inicio" class="text-2xl font-bold tracking-wide text-white">
+          Intell<span class="text-electric">Lab</span>
+        </a>
+        <div class="hidden gap-6 text-sm text-zinc-300 sm:flex">
+          <a href="#figuras" class="transition hover:text-electric">Figuras</a>
+          <a href="#calculadora" class="transition hover:text-electric">Calculadora</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="inicio">
+
+      <!-- PRESENTACIÓN Y BIENVENIDA -->
+      <section class="mx-auto max-w-6xl px-6 py-16 text-center sm:py-24">
+        <p class="mb-4 text-sm font-semibold uppercase tracking-[0.25em] text-electric">Geometría</p>
+        <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+          Calculadora de volúmenes
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-base leading-7 text-zinc-300 sm:text-lg">
+          Calcula el volumen de diferentes figuras geométricas de forma rápida y sencilla.
+        </p>
+        <a href="#calculadora" class="mt-8 inline-block rounded-md border border-electric bg-electric/10 px-6 py-3 font-semibold text-electric transition hover:bg-electric hover:text-zinc-950">
+          Ir a la calculadora
+        </a>
+      </section>
+
+      <!-- TARJETAS SELECCIONABLES DE FIGURAS GEOMÉTRICAS -->
+      <section id="figuras" class="border-y border-zinc-800 bg-zinc-900/50 py-16">
+        <div class="mx-auto max-w-6xl px-6">
+          <h2 class="text-3xl font-bold text-white">Figuras disponibles</h2>
+          <p class="mt-2 text-zinc-400">Selecciona una figura para ajustar automáticamente la calculadora.</p>
+
+          <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            
+            <!-- Tarjeta 1: Cubo -->
+            <article>
+              <a href="#calculadora" onclick="seleccionarFigura('cubo')" class="block h-full rounded-lg border border-electric/60 bg-zinc-950 p-6 transition hover:border-electric">
+                <h3 class="text-xl font-semibold text-white">Cubo</h3>
+                <p class="mt-3 text-zinc-400">Todos sus lados tienen la misma medida.</p>
+                <p class="mt-5 font-mono text-electric">V = lado³</p>
+              </a>
+            </article>
+
+            <!-- Tarjeta 2: Prisma Rectangular -->
+            <article>
+              <a href="#calculadora" onclick="seleccionarFigura('prisma')" class="block h-full rounded-lg border border-electric/60 bg-zinc-950 p-6 transition hover:border-electric">
+                <h3 class="text-xl font-semibold text-white">Prisma rectangular</h3>
+                <p class="mt-3 text-zinc-400">Tiene largo, ancho y altura.</p>
+                <p class="mt-5 font-mono text-electric">V = largo × ancho × altura</p>
+              </a>
+            </article>
+
+            <!-- Tarjeta 3: Cilindro -->
+            <article>
+              <a href="#calculadora" onclick="seleccionarFigura('cilindro')" class="block h-full rounded-lg border border-electric/60 bg-zinc-950 p-6 transition hover:border-electric">
+                <h3 class="text-xl font-semibold text-white">Cilindro</h3>
+                <p class="mt-3 text-zinc-400">Su base es un círculo y tiene una altura.</p>
+                <p class="mt-5 font-mono text-electric">V = π × radio² × altura</p>
+              </a>
+            </article>
+
+            <!-- Tarjeta 4: Cono -->
+            <article>
+              <a href="#calculadora" onclick="seleccionarFigura('cono')" class="block h-full rounded-lg border border-electric/60 bg-zinc-950 p-6 transition hover:border-electric">
+                <h3 class="text-xl font-semibold text-white">Cono</h3>
+                <p class="mt-3 text-zinc-400">Tiene una base circular y una punta.</p>
+                <p class="mt-5 font-mono text-electric">V = (π × radio² × altura) / 3</p>
+              </a>
+            </article>
+
+            <!-- Tarjeta 5: Esfera -->
+            <article>
+              <a href="#calculadora" onclick="seleccionarFigura('esfera')" class="block h-full rounded-lg border border-electric/60 bg-zinc-950 p-6 transition hover:border-electric">
+                <h3 class="text-xl font-semibold text-white">Esfera</h3>
+                <p class="mt-3 text-zinc-400">Todos sus puntos están a la misma distancia del centro.</p>
+                <p class="mt-5 font-mono text-electric">V = (4 / 3) × π × radio³</p>
+              </a>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- FORMULARIO DE CÁLCULO Y VISUALIZADOR 3D -->
+      <section id="calculadora" class="mx-auto max-w-2xl px-6 py-16">
+        <div class="rounded-xl border border-electric/70 bg-zinc-900 p-6 shadow-lg shadow-electric/5 sm:p-8">
+          <h2 class="text-3xl font-bold text-white">Calculadora</h2>
+          <p class="mt-2 text-zinc-400">Elige una figura e ingresa sus medidas.</p>
+
+          <!-- Formulario para ingresar los datos -->
+          <form class="mt-7 space-y-5">
+            <div>
+              <label for="figura" class="mb-2 block text-sm font-medium text-zinc-200">Figura geométrica</label>
+              <select id="figura" name="figura" class="w-full rounded-md border border-zinc-700 bg-zinc-950 px-4 py-3 text-white outline-none transition focus:border-electric focus:ring-1 focus:ring-electric">
+                <option value="cubo">Cubo</option>
+                <option value="prisma">Prisma rectangular</option>
+                <option value="cilindro">Cilindro</option>
+                <option value="cono">Cono</option>
+                <option value="esfera">Esfera</option>
+              </select>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label id="label-medida-1" for="medida-1" class="mb-2 block text-sm font-medium text-zinc-200">Medida 1</label>
+                <input id="medida-1" name="medida-1" type="number" min="0" step="any" placeholder="Ej. 5" class="w-full rounded-md border border-zinc-700 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 outline-none transition focus:border-electric focus:ring-1 focus:ring-electric" />
+              </div>
+              <div>
+                <label id="label-medida-2" for="medida-2" class="mb-2 block text-sm font-medium text-zinc-200">Medida 2</label>
+                <input id="medida-2" name="medida-2" type="number" min="0" step="any" placeholder="Ej. 10" class="w-full rounded-md border border-zinc-700 bg-zinc-950 px-4 py-3 text-white placeholder:text-zinc-600 outline-none transition focus:border-electric focus:ring-1 focus:ring-electric" />
+              </div>
+            </div>
+
+            <button type="button" class="w-full rounded-md border border-electric bg-electric px-5 py-3 font-bold text-zinc-950 transition hover:bg-transparent hover:text-electric">
+              Calcular volumen
+            </button>
+          </form>
+
+          <!-- Bloque donde se muestra el resultado final -->
+          <div class="mt-6 rounded-md border border-zinc-700 bg-zinc-950 p-4 text-center">
+            <p class="text-sm text-zinc-400">Resultado</p>
+            <p id="resultado-texto" class="mt-1 text-2xl font-semibold text-electric">Aún no calculado</p>
+          </div>
+
+          <!-- Contenedor donde p5.js dibuja la figura 3D -->
+          <div id="contenedor-3d" class="mt-6 flex justify-center items-center rounded-md border border-zinc-700 bg-zinc-950 p-4"></div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="border-t border-zinc-800 px-6 py-7 text-center text-sm text-zinc-500">
+      <p>IntellLab · Proyecto académico de geometría</p>
+    </footer>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>
